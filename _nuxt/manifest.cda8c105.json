@@ -1,0 +1,10 @@
+{
+  "name": "gowatch-ui",
+  "short_name": "gowatch-ui",
+  "description": "GoWatch Web",
+  "icons": [],
+  "start_url": "/gowatch/?standalone=true",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "lang": "en"
+}
