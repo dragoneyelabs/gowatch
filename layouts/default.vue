@@ -13,10 +13,10 @@
           align="center"
         >
           <v-col cols="auto">
-            <h2>
+            <h2 :class="{ 'title': $vuetify.breakpoint.xsOnly, 'headline': $vuetify.breakpoint.smAndUp }">
               <v-icon
                 class="mt-n1 mr-3"
-                x-large
+                :size="$vuetify.breakpoint.xsOnly ? 24 : 36"
               >
                 mdi-watch
               </v-icon>
@@ -35,7 +35,7 @@
                 overlap
               >
                 <v-btn
-                  x-large
+                  large
                   icon
                   @click="drawer = true"
                 >
@@ -59,99 +59,102 @@
       right
       app
     >
-      <v-row
-        justify="center"
-        no-gutters
-      >
-        <v-col
-          cols="auto"
-          class="pt-4 px-6"
+      <v-container fluid>
+        <v-row
+          class="mt-2"
+          justify="center"
+          no-gutters
         >
-          <v-btn
-            icon
-            @click="drawer = false"
+          <v-col cols="auto">
+            <v-btn
+              icon
+              @click="drawer = false"
+            >
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-col>
+        </v-row>
+
+        <v-row
+          class="my-6"
+          justify="center"
+          no-gutters
+        >
+          <v-col
+            cols="auto"
+            class="mr-4"
           >
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-col>
-      </v-row>
+            <v-btn
+              :disabled="shoppedWatchesCount === 0"
+              :small="$vuetify.breakpoint.xsOnly"
+              color="primary"
+              rounded
+              @click="exportCSV"
+            >
+              Download CSV
+            </v-btn>
+          </v-col>
+          <v-col cols="auto">
+            <v-btn
+              :disabled="shoppedWatchesCount === 0"
+              :small="$vuetify.breakpoint.xsOnly"
+              color="error"
+              rounded
+              @click="clearWatches"
+            >
+              Clear all
+            </v-btn>
+          </v-col>
+        </v-row>
 
-      <v-subheader>Selected watches ({{ shoppedWatchesCount }})</v-subheader>
-      <v-divider />
+        <v-subheader>Selected watches ({{ shoppedWatchesCount }})</v-subheader>
+        <v-divider />
 
-      <v-virtual-scroll
-        :items="shoppedWatches"
-        item-height="66"
-        height="calc(100vh - 200px)"
-      >
-        <template v-slot:default="{ item: watch }">
-          <v-list-item>
-            <v-list-item-avatar>
-              <v-img :src="imageSrc(watch)" />
-            </v-list-item-avatar>
+        <v-virtual-scroll
+          :items="shoppedWatches"
+          item-height="66"
+          height="calc(100vh - 250px)"
+        >
+          <template v-slot:default="{ item: watch }">
+            <v-list-item>
+              <v-list-item-avatar>
+                <v-img :src="imageSrc(watch)" />
+              </v-list-item-avatar>
 
-            <v-list-item-content>
-              <v-list-item-title style="overflow: visible">
-                {{ watch.id }}
+              <v-list-item-content>
+                <v-list-item-title style="overflow: visible">
+                  {{ watch.id }}
+                  <v-btn
+                    :href="watchLink(watch)"
+                    target="_blank"
+                    class="mt-n1"
+                    small
+                    icon
+                  >
+                    <v-icon small>
+                      mdi-link-variant
+                    </v-icon>
+                  </v-btn>
+                </v-list-item-title>
+                <v-list-item-subtitle>
+                  {{ watch.brand }}
+                </v-list-item-subtitle>
+              </v-list-item-content>
+
+              <v-list-item-action>
                 <v-btn
-                  :href="watchLink(watch)"
-                  target="_blank"
-                  class="mt-n1"
-                  small
                   icon
+                  @click="removeWatch(watch)"
                 >
-                  <v-icon small>
-                    mdi-link-variant
-                  </v-icon>
+                  <v-icon>mdi-delete</v-icon>
                 </v-btn>
-              </v-list-item-title>
-              <v-list-item-subtitle>
-                {{ watch.brand }}
-              </v-list-item-subtitle>
-            </v-list-item-content>
+              </v-list-item-action>
+            </v-list-item>
 
-            <v-list-item-action>
-              <v-btn
-                icon
-                @click="removeWatch(watch)"
-              >
-                <v-icon>mdi-delete</v-icon>
-              </v-btn>
-            </v-list-item-action>
-          </v-list-item>
-
-          <v-divider />
-        </template>
-      </v-virtual-scroll>
-
-      <v-row justify="center">
-        <v-col
-          cols="auto"
-          class="mt-6"
-        >
-          <v-btn
-            :disabled="shoppedWatchesCount === 0"
-            color="primary"
-            rounded
-            @click="exportCSV"
-          >
-            Download CSV
-          </v-btn>
-        </v-col>
-        <v-col
-          cols="auto"
-          class="mt-6"
-        >
-          <v-btn
-            :disabled="shoppedWatchesCount === 0"
-            color="error"
-            rounded
-            @click="clearWatches"
-          >
-            Clear all
-          </v-btn>
-        </v-col>
-      </v-row>
+            <v-divider />
+          </template>
+        </v-virtual-scroll>
+      </v-container>
     </v-navigation-drawer>
   </v-app>
 </template>
